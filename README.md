@@ -14,7 +14,7 @@ You are too lazy to take a proper screenshot of your screen. You see your phone 
 
 ![Noisy photo](https://user-images.githubusercontent.com/23103524/57874836-d8cd6180-77e7-11e9-8cda-cdf32e0b2f82.png)
 
-We've all been there. Enter silentMoire: using silentMoire you should be able to restore the image back to something more like the original picture:
+We've all been there, enter silentMoire: using silentMoire you should be able to restore the image back to something more like the original picture:
 
 ![Restored photo](https://user-images.githubusercontent.com/23103524/57874787-c6ebbe80-77e7-11e9-899e-c72f5756e1df.png)
 
