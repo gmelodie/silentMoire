@@ -36,12 +36,12 @@ def cut(img):   #function for cut image into a block
 
     return img_cut  #return cut image
 
-def low_pass(radius, final_shape, debug=False):
-    filt = np.zeros((radius, radius))
+def low_pass(radius, final_shape, debug=False): # create low pass filter
+    filt = np.zeros((radius, radius))   #create matrix for new filter
 
-    # TODO: enhance later
-    for x in range(radius):
-        for y in range(radius):
+    # TODO: enhance later   
+    for x in range(radius):     #create a circular area with values 1
+        for y in range(radius): # this will be the pass region
             if (radius//2 - x)**2 + (radius//2 - y)**2 < (radius//2)**2:
                 filt[x][y] = 1
 
@@ -51,23 +51,19 @@ def low_pass(radius, final_shape, debug=False):
 
     # calculate padding shape
     # TODO: fix even/odd cases
-    aux1 = final_shape[0] - filt.shape[0]
-    if(aux1%2 == 0):
-        print("par")
-        pad_rows = ( (final_shape[0] - filt.shape[0])//2, \
-                     (final_shape[0] - filt.shape[0])//2 )
-    else:
-        print("impar")
+    aux1 = final_shape[0] - filt.shape[0]   #calculate the difference betwen
+    if(aux1%2 == 0):                         #the circular filter and the real image
+        pad_cols = ( (final_shape[0] - filt.shape[0])//2, \
+                    (final_shape[0] - filt.shape[0])//2)
+    else:                                   #verify size based on the difference
         pad_rows = ( (final_shape[0] - filt.shape[0])//2+1, \
                      (final_shape[0] - filt.shape[0])//2+1 )
 
-    aux2 = final_shape[1] - filt.shape[1]
-    if(aux2%2 == 0):
-        print("par")
+    aux2 = final_shape[1] - filt.shape[1]   #calculate the difference betwen
+    if(aux2%2 == 0):                        #the circular filter and the real image
         pad_cols = ( (final_shape[1] - filt.shape[1])//2, \
                      (final_shape[1] - filt.shape[1])//2)
-    else:
-        print("impar")
+    else:                                   #verify size based on the difference
         pad_cols = ( (final_shape[1] - filt.shape[1])//2+1, \
                      (final_shape[1] - filt.shape[1])//2+1)
 
@@ -75,10 +71,10 @@ def low_pass(radius, final_shape, debug=False):
 
     # padding
     filt = np.pad(filt, pad_shape, 'constant', constant_values=0)
-
-    if(aux1%2 != 0 and aux2%2 != 0):
+                                             #check for even numbers
+    if(aux1%2 != 0 and aux2%2 != 0):         #if needed remove row and/or coluns
         filt = filt[0:filt.shape[0]-1, 0:filt.shape[1]-1]
-    elif(aux1%2 != 0 and aux2%2 == 0):
+    elif(aux1%2 != 0 and aux2%2 == 0):       
         filt = filt[0:filt.shape[0]-1, 0:filt.shape[1]]
     elif(aux1%2 == 0 and aux2%2 != 0):
         filt = filt[0:filt.shape[0], 0:filt.shape[1]-1]
@@ -93,7 +89,7 @@ def low_pass(radius, final_shape, debug=False):
 
     return filt
 
-def median_filter(img):
+def median_filter(img): # vai deixar esse?
     k = 3
     m, n = img.shape
     out = np.copy(img)
@@ -106,31 +102,31 @@ def median_filter(img):
     return out
 
 
-def rgb2gray(rgb):
+def rgb2gray(rgb):      # pass image from RGB to gray levels
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
-
-img = imageio.imread('cat_original.jpg')
-img = rgb2gray(img)
+#main
+img = imageio.imread('cat_original.jpg')    #read original image
+img = rgb2gray(img)                     # pass image too grey levels
 
 print(img.shape)
 
-img = vertical_noise(img)
+img = vertical_noise(img)               #aply noises
 img = horizontal_noise(img)
 
 plt.imshow(img, cmap='gray')
 plt.show()
 
-img_fft = fftn(img)
-img_fft_shift = fftshift(img_fft)
+img_fft = fftn(img)                     #aply fourier transform
+img_fft_shift = fftshift(img_fft)       #aply shift into the fourier image
 
 
 # quais filtros vamos usar?
 ###################################################################
 #img_fft_shift_filtered = median_filter(img_fft_shift)
 
-filt = low_pass(401, img.shape)
-img_fft_shift_filtered = img_fft_shift * filt 
+filt = low_pass(401, img.shape)                 #create low pass filter
+img_fft_shift_filtered = img_fft_shift * filt   #aply the filter in the fourier image
 
 #img_fft_shift_filtered = cut(img_fft_shift)
 ###################################################################
@@ -138,7 +134,7 @@ img_fft_shift_filtered = img_fft_shift * filt
 plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
 plt.show()
 
-res = ifftn( fftshift(img_fft_shift_filtered) )
-
+res = ifftn( fftshift(img_fft_shift_filtered) ) # create result image using inverse
+                                                # fourier transform
 plt.imshow(np.abs(res), cmap='gray', norm=LogNorm(vmin=5))
 plt.show()
