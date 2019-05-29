@@ -1,0 +1,15 @@
+#
+#
+#
+#
+#
+#
+#
+#
+#
+#  NOISE GENERATION FUNCTIONS
+#
+#
+
+
+
