@@ -26,7 +26,7 @@ We've all been there, enter silentMoire: using silentMoire you should be able to
 Taking pictures containing Moiré patterns can be quite difficult, as it depends a lot on your camera and the refresh rate of your monitor. Because of that, the patterns will be artificially generated, adding black vertical, horizontal and/or diagonal lines in the image. It is important to notice that the images used will be in grayscale.
 
 ### Denoising
-Removing the Moiré pattern from the image is based on changing the domain of the image using the Fast Fourier Transform. Then, a low-pass filter is applied on the noisy image, removing the high frequency noises, verified to appear on the edges of the shifted Fourier image, keeping the image essential frequencies, denoising it back to the original (almost).
+Removing the Moiré pattern from the image is based on changing the domain of the image using the Fast Fourier Transform. Then, a low-pass filter is applied on the shifted Fourier of the noisy image, removing the high frequency noises, verified to appear on the edges of the shifted Fourier image, keeping the image essential frequencies, denoising it back to the original (almost).
 
 ## Code
 There is a step-by-step example on a [Jupyter Notebook](https://github.com/LTKills/silentMoire/blob/master/study.ipynb) inside this repo.
