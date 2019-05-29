@@ -33,6 +33,8 @@ There is a step-by-step example on a [Jupyter Notebook](https://github.com/LTKil
 
 ## Moiré Patterns
 [description about Moire Patterns]
+A moiré pattern is an interference pattern created when an observer observes through two overlapping periodic structures, in our case it ocours when someone try to take a picture of a screen or monitor.
+For this job we diced to solve patterns that create lines at the noisy image, where these lines can be horizontal, vertical and diagonal.
 
 
 ## Authors
