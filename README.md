@@ -30,6 +30,7 @@ Removing the Moiré pattern from the image is based on changing the domain of th
 
 ## Code
 There is a step-by-step example on a [Jupyter Notebook](https://github.com/LTKills/silentMoire/blob/master/study.ipynb) inside this repo.
+You can alsu run the all.py documment to see some images and results.
 
 ## Moiré Patterns
 [description about Moire Patterns]
