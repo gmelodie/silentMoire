@@ -22,7 +22,7 @@ We've all been there, enter silentMoire: using silentMoire you should be able to
 
 ## Techniques
 
-### Pre-processing
+### Noising
 Taking pictures containing Moiré patterns can be quite difficult, as it depends a lot on your camera and the refresh rate of your monitor. Because of that, the patterns will be artificially generated, adding black vertical, horizontal and/or diagonal lines in the image. It is important to notice that the images used will be in grayscale.
 
 ### Denoising
@@ -30,13 +30,14 @@ Removing the Moiré pattern from the image is based on changing the domain of th
 
 ## Code
 There is a step-by-step example on a [Jupyter Notebook](https://github.com/LTKills/silentMoire/blob/master/study.ipynb) inside this repo.
-You can alsu run the all.py documment to see some images and results.
+You can also run the all.py document to see some images and results.
 
 ## Moiré Patterns
-[description about Moire Patterns]
-A moiré pattern is an interference pattern created when an observer observes through two overlapping periodic structures, in our case it ocours when someone try to take a picture of a screen or monitor.
-For this work we decided to solve patterns that create lines at the noisy image, these lines being horizontal, vertical and diagonal.
+A moiré pattern is an interference pattern created when an observer observes through two overlapping periodic structures, in our case it ocours when someone tries to take a picture of a screen or monitor.
+For this project we have decided to remove horizontal and vertical Moiré patterns.
 
+## Images source
+All the images used in this project were taken from [Pexels](https://www.pexels.com/) and [Unsplash](https://unsplash.com/).
 
 ## Authors
 
