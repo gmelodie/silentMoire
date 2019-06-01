@@ -106,7 +106,7 @@ def rgb2gray(rgb):      # pass image from RGB to gray levels
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 #main
-img = imageio.imread('cat_original.jpg')    #read original image
+img = imageio.imread('images/cat_original.jpg')    #read original image
 img = rgb2gray(img)                     # pass image too grey levels
 
 print(img.shape)
