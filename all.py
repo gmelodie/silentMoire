@@ -4,6 +4,17 @@ import imageio
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
 
+def diagonal_noise(img):    #create lines for diagonal moiré pattern
+
+    img_noise = np.copy(img)    #copy image to image_noise
+
+    for x in range(img_noise.shape[0]):         #make diagonal black lines
+        for y in range(img_noise.shape[1]):
+            if( (x*img_noise.shape[0]+y) % 3 == 0):
+                img_noise[x,y] = 0
+
+    return img_noise            #return noise image
+
 def horizontal_noise(img):  #create lines for horizontal moiré pattern
 
     img_noise = np.copy(img)    #copy image to image_noise
@@ -28,11 +39,16 @@ def cut(img):   #function for cut image into a block
 
     img_cut = np.copy(img)  #copy image to image_cut
 
+    #for x in range(img.shape[0]):       # remove image parts to rest only the
+    #    for y in range(img.shape[1]):   # 1/3 center of it in vertical and horizontal
+    #        if( x < img.shape[0]//3 or x > img.shape[0]*2//3 \
+    #        or y < img.shape[1]//3 or y > img.shape[1]*2//3):
+    #            img_cut[x,y] = 0  
+
     for x in range(img.shape[0]):       # remove image parts to rest only the
-        for y in range(img.shape[1]):   # 1/3 center of it in vertical e horizontal
-            if( x < img.shape[0]//3 or x > img.shape[0]*2//3   \
-            or y < img.shape[1]//3 or y > img.shape[1]*2//3):
-                img_cut[x,y] = 0  
+        for y in range(img.shape[1]):   # 1/3 center of it in horizontal
+            if( x < img.shape[0]//3 or x > img.shape[0]*2//3):
+                img_cut[x,y] = 0 
 
     return img_cut  #return cut image
 
@@ -106,35 +122,83 @@ def rgb2gray(rgb):      # pass image from RGB to gray levels
     return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
 
 #main
-img = imageio.imread('images/cat_original.jpg')    #read original image
-img = rgb2gray(img)                     # pass image too grey levels
+img = imageio.imread('images/cat_original.jpg')     #read original image
+img = rgb2gray(img)                                 # pass image too grey levels
 
-print(img.shape)
+print(img.shape)                        #show image shape
 
-img = vertical_noise(img)               #aply noises
-img = horizontal_noise(img)
 
-plt.imshow(img, cmap='gray')
+plt.imshow(img, cmap='gray')            #show original image
 plt.show()
 
-img_fft = fftn(img)                     #aply fourier transform
-img_fft_shift = fftshift(img_fft)       #aply shift into the fourier image
+print("Press 1 to horizontal noise:")
+print("Press 2 to vertical noise:")
+print("Press 3 to horizontal and vertical noise:")
+print("Press 4 to diagonal noise:")
+print("Press 5 to horizontal, vertical and diagonal noise:")
 
+option = int(input())           #option for aply noises
 
-# quais filtros vamos usar?
-###################################################################
-#img_fft_shift_filtered = median_filter(img_fft_shift)
+if(option == 1):
+    img = horizontal_noise(img)
 
-filt = low_pass(401, img.shape)                 #create low pass filter
-img_fft_shift_filtered = img_fft_shift * filt   #aply the filter in the fourier image
+elif(option == 2):
+    img = vertical_noise(img) 
 
-#img_fft_shift_filtered = cut(img_fft_shift)
-###################################################################
+elif(option == 3):
+    img = horizontal_noise(img)
+    img = vertical_noise(img)
 
-plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
+elif(option == 4):
+    img = diagonal_noise(img)
+
+elif(option == 5):
+    img = horizontal_noise(img)
+    img = vertical_noise(img) 
+    img = diagonal_noise(img)
+
+else:
+    print("valor inválido")
+
+plt.imshow(img, cmap='gray')            #show noise image
 plt.show()
 
-res = ifftn( fftshift(img_fft_shift_filtered) ) # create result image using inverse
-                                                # fourier transform
-plt.imshow(np.abs(res), cmap='gray', norm=LogNorm(vmin=5))
-plt.show()
+print("Press 1 to median filter:")
+print("Press 2 to fourier cut filter:")
+print("Press 3 to fourier low pass filter:")
+
+option = int(input())           #option for filter
+
+if(option == 1):
+    img_filtered = median_filter(img)       #aply median filter
+    plt.imshow(img_filtered, cmap='gray')   #show filtered image
+    plt.show()
+
+elif(option == 2):
+    img_fft = fftn(img)                             #aply fourier transform
+    img_fft_shift = fftshift(img_fft)               #aply shift into the fourier image
+    plt.imshow(np.abs(img_fft_shift), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()                                      #show the spectrum
+    img_fft_shift_filtered = cut(img_fft_shift)     #cut the shifted image
+    plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()                                      #show cut spectrum
+    res = ifftn( fftshift(img_fft_shift_filtered) ) # create result image using inverse
+    plt.imshow(np.abs(res), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()                                      #show the result image
+
+elif(option == 3):
+    img_fft = fftn(img)                             #aply fourier transform
+    img_fft_shift = fftshift(img_fft)               #aply shift into the fourier image
+    plt.imshow(np.abs(img_fft_shift), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()                                      #show the spectrum
+    filt = low_pass(501, img.shape)                 #create low pass filter
+    img_fft_shift_filtered = img_fft_shift * filt   #aply the filter in the fourier image
+    plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()                                      #show low filter pass spectrum 
+    res = ifftn( fftshift(img_fft_shift_filtered) ) # create result image using inverse
+    plt.imshow(np.abs(res), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()                                      #show the result image
+
+else:
+    print("valor inválido")
+
