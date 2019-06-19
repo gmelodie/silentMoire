@@ -6,48 +6,51 @@ from skimage.util import random_noise
 from matplotlib.colors import LogNorm
 
 
-def median_filter(img):
-    k = 3
-    m, n = img.shape
-    out = np.copy(img)
-    for x in range(0, m):
-        for y in range(0, n):
-            if((x-k >= 0 and x+k < m) and (y-k >= 0 and y+k < n)):
-                flat = img[x-k:x+k+1,y-k: y+k+1].flatten()
-                flat.sort()
-                out[x, y] = flat[len(flat)//2]
-    return out
+def diagonal_noise(img, gap):
+    """
+    Create lines for diagonal moiré pattern
+
+    gap: number of pixels between black pixels
+    """
+    img_noise = np.copy(img)
+
+    for x in range(img_noise.shape[0]):
+        for y in range(img_noise.shape[1]):
+            if( (x*img_noise.shape[0]+y) % gap == 0):
+                img_noise[x,y] = 0
+
+    return img_noise
 
 
-def rgb2gray(rgb):
-    return np.dot(rgb[...,:3], [0.2989, 0.5870, 0.1140])
+def horizontal_noise(img, gap):
+    """
+    Create black lines for horizontal moiré pattern
+
+    gap: number of rows between black rows
+    """
+    img_noise = np.copy(img)
+
+    # black out a row in every [gap]
+    for x in range(0, img_noise.shape[0], gap):
+        for y in range(img_noise.shape[1]):
+            img_noise[x,y] = 0
+
+    return img_noise
 
 
-def low_pass(radius):
-    filt = np.zeros((radius, radius))
-    # TODO: enhance later
-    for x in range(radius):
-        for y in range(radius):
-            if (radius//2 - x)**2 + (radius//2 - y)**2 < (radius//2)**2:
-                filt[x][y] = 1
-    plt.imshow(filt)
-    plt.show()
-    return filt
+def vertical_noise(img, gap):
+    """
+    Create lines for vertical moiré pattern
 
+    gap: number of cols between black cols
+    """
+    img_noise = np.copy(img)
 
-if __name__ == '__main__':
-    img = imageio.imread('images/cat_horizontal.jpg')
-    img = rgb2gray(img)
-    img_fft = fft2(img)
-    img_fft_shift = fftshift(img_fft)
-    #img_fft_shift_filtered = median_filter(img_fft_shift)
+    # black out a column in every [gap]
+    for x in range(img_noise.shape[0]):
+        for y in range(0, img_noise.shape[1], gap):
+            img_noise[x,y] = 0
 
-
-    #res = ifft2(img_fft_shift)
-    res = ifft2(img_fft)
-    #plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
-    plt.imshow(np.abs(res), cmap='gray')
-    plt.show()
-
+    return img_noise
 
 
