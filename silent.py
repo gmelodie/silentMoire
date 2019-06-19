@@ -85,8 +85,8 @@ if __name__ == '__main__':
     img_gray_filtered = np.copy(img_gray_noisy)
 
     for filter_opt in filter_options:
-        img_gray_noisy = filters[filter_opt](img_gray_filtered)
-        plt.imshow(img_filtered, cmap='gray')
+        img_gray_filtered = filters[filter_opt](img_gray_filtered)
+        plt.imshow(img_gray_filtered, cmap='gray')
         plt.show()
 
 
@@ -95,16 +95,6 @@ if __name__ == '__main__':
         img_filtered = median_filter(img)       #aply median filter
 
     elif(option == 2):
-        img_fft = fftn(img)                             #aply fourier transform
-        img_fft_shift = fftshift(img_fft)               #aply shift into the fourier image
-        plt.imshow(np.abs(img_fft_shift), cmap='gray', norm=LogNorm(vmin=5))
-        plt.show()                                      #show the spectrum
-        img_fft_shift_filtered = cut(img_fft_shift)     #cut the shifted image
-        plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
-        plt.show()                                      #show cut spectrum
-        res = ifftn( fftshift(img_fft_shift_filtered) ) # create result image using inverse
-        plt.imshow(np.abs(res), cmap='gray', norm=LogNorm(vmin=5))
-        plt.show()                                      #show the result image
 
     elif(option == 3):
         img_fft = fftn(img)                             #aply fourier transform

@@ -4,10 +4,14 @@ import imageio
 import matplotlib.pyplot as plt
 
 
-def low_pass(img, debug=False): # create low pass filter
-    filt = np.zeros((radius, radius))   #create matrix for new filter
+# TODO: implement image receival and fourier transformation
+# OBS: no longer returns filter, but filtered image
+def low_pass(img, radius=50, debug=False):
+    """
+    Filters image using low pass filter in Fourier domain
+    Returns filtered image
+    """
 
-    # TODO: enhance later
     for x in range(radius):     #create a circular area with values 1
         for y in range(radius): # this will be the pass region
             if (radius//2 - x)**2 + (radius//2 - y)**2 < (radius//2)**2:
@@ -58,14 +62,14 @@ def low_pass(img, debug=False): # create low pass filter
     return filt
 
 
+# TODO: implement (receive img return img)
 def high_pass(img, debug=False):
     filt = np.ones((radius, radius))
 
-    # TODO: enhance later
     for x in range(radius):
         for y in range(radius):
             if (radius//2 - x)**2 + (radius//2 - y)**2 < (radius//2)**2:
-                filt[x][y] = 1
+                filt[x][y] = 0
 
     if debug:
         plt.imshow(filt)
@@ -74,34 +78,56 @@ def high_pass(img, debug=False):
     return filt
 
 
-def median(img): # vai deixar esse?
-    k = 3
-    m, n = img.shape
-    out = np.copy(img)
-    for x in range(0, m):
-        for y in range(0, n):
-            if((x-k >= 0 and x+k < m) and (y-k >= 0 and y+k < n)):
-                flat = img[x-k:x+k+1,y-k: y+k+1].flatten()
-                flat.sort()
-                out[x, y] = flat[len(flat)//2]
-    return out
+def _median(img, x, y, k):
+    """
+    Computes median for k-neighborhood of img[x,y]
+    """
+    flat = img[x-k : x+k+1, y-k : y+k+1].flatten()
+    flat.sort()
+    res[x, y] = flat[len(flat)//2]
 
 
-def cut(img):   #function for cut image into a block
+def median(img, k=3):
+    """
+    Changes every pixel to the median of its neighboors
+    """
+    res = np.copy(img)
 
-    img_cut = np.copy(img)  #copy image to image_cut
+    for x in range(img.shape[0]):
+        for y in range(img.shape[1]):
+            if (x-k >= 0 and x+k < m) and (y-k >= 0 and y+k < n):
+                res[x, y] = _median(x, y, k)
 
-    #for x in range(img.shape[0]):       # remove image parts to rest only the
-    #    for y in range(img.shape[1]):   # 1/3 center of it in vertical and horizontal
-    #        if( x < img.shape[0]//3 or x > img.shape[0]*2//3 \
-    #        or y < img.shape[1]//3 or y > img.shape[1]*2//3):
-    #            img_cut[x,y] = 0
+    return res
 
-    for x in range(img.shape[0]):       # remove image parts to rest only the
-        for y in range(img.shape[1]):   # 1/3 center of it in horizontal
+
+def cut(img):
+    """
+    Applies central horizontal threshold in Fourier spectrum
+    """
+
+    # Apply fourier transform and shift
+    img_fft = fftn(img)
+    img_fft_shift = fftshift(img_fft)
+
+    # Print spectrum before
+    plt.imshow(np.abs(img_fft_shift), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()
+
+    # Filter image: remove upper and lower horizontal thirds (1/3)
+    img_fft_shift_filtered = np.copy(img_fft_shift)
+    for x in range(img.shape[0]):
+        for y in range(img.shape[1]):
             if( x < img.shape[0]//3 or x > img.shape[0]*2//3):
-                img_cut[x,y] = 0
+                img_fft_shift_filtered[x,y] = 0
 
-    return img_cut  #return cut image
+    # Print spectrum after
+    plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()
+
+    # Return to space domain result image using inverse
+    res = ifftn( fftshift(img_fft_shift_filtered) )
+
+    return res
 
 
