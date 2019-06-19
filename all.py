@@ -1,39 +1,10 @@
+
 import numpy as np
+import src.noises
 from scipy.fftpack import fftn, ifftn, fftshift
 import imageio
 import matplotlib.pyplot as plt
 from matplotlib.colors import LogNorm
-
-def diagonal_noise(img):    #create lines for diagonal moiré pattern
-
-    img_noise = np.copy(img)    #copy image to image_noise
-
-    for x in range(img_noise.shape[0]):         #make diagonal black lines
-        for y in range(img_noise.shape[1]):
-            if( (x*img_noise.shape[0]+y) % 3 == 0):
-                img_noise[x,y] = 0
-
-    return img_noise            #return noise image
-
-def horizontal_noise(img):  #create lines for horizontal moiré pattern
-
-    img_noise = np.copy(img)    #copy image to image_noise
-
-    for x in range(0,img_noise.shape[0],3): #make one black line every 3 rows
-        for y in range(img_noise.shape[1]):
-            img_noise[x,y] = 0
-
-    return img_noise    #return noise image
-
-def vertical_noise(img):    #create lines for vertical moiré pattern
-
-    img_noise = np.copy(img)    #copy image to image_noise
-
-    for x in range(img_noise.shape[0]): #make one black line every 3 coluns
-        for y in range(0,img_noise.shape[1],3):
-            img_noise[x,y] = 0
-
-    return img_noise    #return noise image
 
 def cut(img):   #function for cut image into a block
 
@@ -127,7 +98,6 @@ img = rgb2gray(img)                                 # pass image too grey levels
 
 print(img.shape)                        #show image shape
 
-
 plt.imshow(img, cmap='gray')            #show original image
 plt.show()
 
@@ -140,22 +110,22 @@ print("Press 5 to horizontal, vertical and diagonal noise:")
 option = int(input())           #option for aply noises
 
 if(option == 1):
-    img = horizontal_noise(img)
+    img = src.noises.horizontal(img, 3)
 
 elif(option == 2):
-    img = vertical_noise(img) 
+    img = src.noises.vertical(img, 3)
 
 elif(option == 3):
-    img = horizontal_noise(img)
-    img = vertical_noise(img)
+    img = src.noises.horizontal(img, 3)
+    img = src.noises.vertical(img, 3)
 
 elif(option == 4):
-    img = diagonal_noise(img)
+    img = src.noises.diagonal(img, 3)
 
 elif(option == 5):
-    img = horizontal_noise(img)
-    img = vertical_noise(img) 
-    img = diagonal_noise(img)
+    img = src.noises.horizontal(img, 3)
+    img = src.noises.vertical(img, 3)
+    img = src.noises.diagonal(img, 3)
 
 else:
     print("valor inválido")
