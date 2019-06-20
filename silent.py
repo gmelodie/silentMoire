@@ -26,12 +26,11 @@ def noise_menu():
 
 
 def filter_menu():
-    print(" Choose four filter options (e.g. 2 1 3 0)")
+    print(" Choose three filter options (e.g. 2 1 0)")
     print("(0) No filter")
     print("(1) Median filter")
     print("(2) Cut filter")
     print("(3) Low pass filter")
-    print("(4) High pass filter")
 
     options = [int(opt) for opt in input().split()]
 
@@ -40,7 +39,7 @@ def filter_menu():
 
 if __name__ == '__main__':
 
-    if sys.argc != 2:
+    if len(sys.argv) != 2:
         print('usage: python silent.py <INPUT IMAGE>')
         exit(0)
 
@@ -65,50 +64,29 @@ if __name__ == '__main__':
         3: src.noises.diagonal,
     }
 
-    img_gray_noisy = np.copy(img_gray)
-
-    for noise_opt in noise_options:
-        img_gray_noisy = noises[noise_opt](img_gray_noisy, 3)
-        plt.imshow(img_gray_noisy, cmap='gray')
-        plt.show()
-
     # Choose and apply filter functions
     filter_options = filter_menu()
+
     filters = {
         1: src.filters.median,
         2: src.filters.cut,
         3: src.filters.low_pass,
-        4: src.filters.high_pass,
     }
 
     # Apply chosen noises
+    img_gray_noisy = np.copy(img_gray)
+    for noise_opt in noise_options:
+        if noise_opt != 0:
+            img_gray_noisy = noises[noise_opt](img_gray_noisy, 3)
+            plt.imshow(img_gray_noisy, cmap='gray')
+            plt.show()
+
+    # Apply chosen filters
     img_gray_filtered = np.copy(img_gray_noisy)
-
     for filter_opt in filter_options:
-        img_gray_filtered = filters[filter_opt](img_gray_filtered)
-        plt.imshow(img_gray_filtered, cmap='gray')
-        plt.show()
+        if filter_opt != 0:
+            img_gray_filtered = filters[filter_opt](img_gray_filtered)
+            plt.imshow(img_gray_filtered, cmap='gray')
+            plt.show()
 
-
-    # TODO: RELOCATE THIS PART OF THE CODE
-    if(option == 1):
-        img_filtered = median_filter(img)       #aply median filter
-
-    elif(option == 2):
-
-    elif(option == 3):
-        img_fft = fftn(img)                             #aply fourier transform
-        img_fft_shift = fftshift(img_fft)               #aply shift into the fourier image
-        plt.imshow(np.abs(img_fft_shift), cmap='gray', norm=LogNorm(vmin=5))
-        plt.show()                                      #show the spectrum
-        filt = low_pass(501, img.shape)                 #create low pass filter
-        img_fft_shift_filtered = img_fft_shift * filt   #aply the filter in the fourier image
-        plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
-        plt.show()                                      #show low filter pass spectrum 
-        res = ifftn( fftshift(img_fft_shift_filtered) ) # create result image using inverse
-        plt.imshow(np.abs(res), cmap='gray', norm=LogNorm(vmin=5))
-        plt.show()                                      #show the result image
-
-    else:
-        print("valor inválido")
 
