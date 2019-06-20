@@ -4,3 +4,4 @@ numpy
 matplotlib
 imageio
 scipy
+skimage
