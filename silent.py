@@ -14,8 +14,7 @@ def rgb2gray(rgb):      # pass image from RGB to gray levels
 
 
 def noise_menu():
-    print("Choose three options (e.g. 3 2 0):")
-    print("(0) No noise")
+    print("Choose up to three options (e.g. 3 2):")
     print("(1) Horizontal noise")
     print("(2) Vertical noise")
     print("(3) Diagonal noise")
@@ -26,8 +25,7 @@ def noise_menu():
 
 
 def filter_menu():
-    print(" Choose three filter options (e.g. 2 1 0)")
-    print("(0) No filter")
+    print(" Choose up to three filter options (e.g. 2 1)")
     print("(1) Median filter")
     print("(2) Cut filter")
     print("(3) Low pass filter")
@@ -76,17 +74,13 @@ if __name__ == '__main__':
     # Apply chosen noises
     img_gray_noisy = np.copy(img_gray)
     for noise_opt in noise_options:
-        if noise_opt != 0:
-            img_gray_noisy = noises[noise_opt](img_gray_noisy, 3)
-            plt.imshow(img_gray_noisy, cmap='gray')
-            plt.show()
+        img_gray_noisy = noises[noise_opt](img_gray_noisy, 3)
+        plt.imshow(img_gray_noisy, cmap='gray')
+        plt.show()
 
     # Apply chosen filters
     img_gray_filtered = np.copy(img_gray_noisy)
     for filter_opt in filter_options:
-        if filter_opt != 0:
-            img_gray_filtered = filters[filter_opt](img_gray_filtered)
-            plt.imshow(img_gray_filtered, cmap='gray')
-            plt.show()
-
-
+        img_gray_filtered = filters[filter_opt](img_gray_filtered)
+        plt.imshow(img_gray_filtered, cmap='gray')
+        plt.show()

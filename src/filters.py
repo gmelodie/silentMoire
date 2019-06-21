@@ -49,7 +49,7 @@ def _low_pass_filter(radius, final_shape):
         filt = filt[0:filt.shape[0], 0:filt.shape[1]-1]
 
     print(filt.shape)
-    plt.imshow(filt, cmpa)
+    plt.imshow(filt, cmap='gray')
     plt.show()
 
     return filt
@@ -77,7 +77,7 @@ def low_pass(img, radius=501, debug=False):
     plt.show()
 
     # Generate result image
-    return ifftn(fftshift(img_fft_shift_filtered))
+    return np.abs(ifftn(fftshift(img_fft_shift_filtered)))
 
 
 def _local_median(img, x, y, k):
@@ -129,6 +129,6 @@ def cut(img):
     plt.show()
 
     # Return to space domain result image using inverse
-    return ifftn( fftshift(img_fft_shift_filtered) )
+    return np.abs(ifftn(fftshift(img_fft_shift_filtered)))
 
 
