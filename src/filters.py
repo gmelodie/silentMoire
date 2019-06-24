@@ -121,8 +121,16 @@ def cut(img):
     img_fft_shift_filtered = np.copy(img_fft_shift)
     for x in range(img.shape[0]):
         for y in range(img.shape[1]):
-            if( x < img.shape[0]//3 or x > img.shape[0]*2//3):
+            if((x < img.shape[0]//2 - img.shape[0]//30 or \
+               x > img.shape[0]//2 + img.shape[0]//30) and\
+               (y < img.shape[1]//2 - img.shape[1]//30 or \
+               y > img.shape[1]//2 + img.shape[1]//30)):
                 img_fft_shift_filtered[x,y] = 0
+            if((x < img.shape[0]//3 or \
+                x > img.shape[0]*2//3) or \
+               (y < img.shape[1]//3 or \
+                y > img.shape[1]*2//3)):
+                img_fft_shift_filtered[x, y] = 0
 
     # Print spectrum after
     plt.imshow(np.abs(img_fft_shift_filtered), cmap='gray', norm=LogNorm(vmin=5))
@@ -130,5 +138,3 @@ def cut(img):
 
     # Return to space domain result image using inverse
     return np.abs(ifftn(fftshift(img_fft_shift_filtered)))
-
-
