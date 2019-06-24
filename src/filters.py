@@ -138,3 +138,43 @@ def cut(img):
 
     # Return to space domain result image using inverse
     return np.abs(ifftn(fftshift(img_fft_shift_filtered)))
+
+def bandstop(img, threshold=0.0001):
+    """
+    Apply bandstop filter on Fourier spectrum
+    """
+
+    img_fft = fftn(img)
+
+    #chose ther borders values
+    borders = [
+        img_fft[0, 0],
+        img_fft[0, img.shape[1]-1],
+        img_fft[img.shape[0]-1, 0],
+        img_fft[img.shape[0]-1, img.shape[1]-1]
+    ]
+
+    #select the max value and create the treshold
+    borders = np.array(borders)
+    max_value = np.max(borders)
+    T = threshold * np.abs(max_value)
+    print("Max: ", np.max(img_fft))
+    print("Min: ", np.min(img_fft))
+    print("Threshold: ", T)
+    img_fft_shifted = fftshift(img_fft)
+
+    center_x = img_fft_shifted.shape[0]//2
+    center_y = img_fft_shifted.shape[1]//2
+    radius = img_fft_shifted.shape[0] // 6 
+    
+    # Apply the threshold out of the center of image
+    for x in range(img_fft_shifted.shape[0]):
+        for y in range(img_fft_shifted.shape[1]):
+            if (center_x - x)**2 + (center_y - y)**2 > (radius)**2 and np.abs(img_fft_shifted[x, y]) > T :
+                img_fft_shifted[x, y] = 0
+    
+    # Print spectrum after filtering
+    plt.imshow(np.abs(img_fft_shifted), cmap='gray', norm=LogNorm(vmin=5))
+    plt.show()
+
+    return np.abs(ifftn(fftshift(img_fft_shifted)))
