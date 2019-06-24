@@ -29,6 +29,7 @@ def filter_menu():
     print("(1) Median filter")
     print("(2) Cut filter")
     print("(3) Low pass filter")
+    print("(4) Band stop filter")
 
     options = [int(opt) for opt in input().split()]
 
@@ -69,6 +70,7 @@ if __name__ == '__main__':
         1: src.filters.median,
         2: src.filters.cut,
         3: src.filters.low_pass,
+        4: src.filters.bandstop,
     }
 
     # Apply chosen noises
