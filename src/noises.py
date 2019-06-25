@@ -9,7 +9,7 @@ import numpy as np
 from scipy.fftpack import fft2, ifft2, fftshift
 import imageio, math
 import matplotlib.pyplot as plt
-from skimage.util import random_noise
+#from skimage.util import random_noise
 from matplotlib.colors import LogNorm
 
 
