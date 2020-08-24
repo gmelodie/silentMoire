@@ -22,7 +22,7 @@ def _low_pass_filter(radius, final_shape):
     # Calculate padding shape (rows)
     aux1 = final_shape[0] - filt.shape[0]
     if(aux1 % 2 == 0): # even vs odd problem
-        pad_cols = ( (final_shape[0] - filt.shape[0])//2, \
+        pad_rows = ( (final_shape[0] - filt.shape[0])//2, \
                     (final_shape[0] - filt.shape[0])//2)
     else:
         pad_rows = ( (final_shape[0] - filt.shape[0])//2+1, \
