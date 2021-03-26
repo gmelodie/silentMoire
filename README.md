@@ -44,7 +44,7 @@ The original image essential frequencies are kept, denoising it back to the orig
 ![Denoised](https://user-images.githubusercontent.com/23103524/60060190-e10d9c00-96c5-11e9-97cb-03a1f6e396ec.jpg)
 
 ## Code
-There is a step-by-step example on a [Jupyter Notebook](https://github.com/LTKills/silentMoire/blob/master/study.ipynb) inside this repo.
+There is a step-by-step example on a [Jupyter Notebook](https://github.com/gmelodie/silentMoire/blob/master/report.ipynb) inside this repo.
 You can also run the all.py document to see some images and results.
 
 ## Run yourself
